@@ -50,18 +50,19 @@ def restaurant_list(request):
 
 
 def restaurant_detail(request, restaurant_id):
+    restaurant_obj = Restaurant.objects.get(id=restaurant_id)
     context = {
-        "restaurant": Restaurant.objects.get(id=restaurant_id)
+        "restaurant": restaurant_obj,
     }
     return render(request, 'detail.html', context)
 
-def restaurant_create(request):
+def restaurant_create(request): # we made a few changes here
     form = RestaurantForm()
     if request.method == "POST":
         form = RestaurantForm(request.POST, request.FILES)
         if form.is_valid():
-            restaurant = form.save(commit = False)
-            restaurant.owner = request.user
+            restaurant = form.save(commit = False) # from here
+            restaurant.owner = request.user # if there is no login user it will give me anonymous user
             restaurant.save()
             return redirect('restaurant-list')
     context = {
@@ -69,18 +70,18 @@ def restaurant_create(request):
     }
     return render(request, 'create.html', context)
 
-def item_create(request, restaurant_id):
-    restaurant_obj = Restaurant.objects.get(id=restaurant_id)
-    item = ItemForm() 
+def item_create(request, restaurant_id): # to know which restorant i am dealing with, its nearly like restaurant_update
+    restaurant_obj = Restaurant.objects.get(id=restaurant_id) # bring me the restorant (grab it)
+    form = ItemForm() # just an empty form
     if request.method == "POST":
-        item = ItemForm(request.POST)
-        if item.is_valid():
-            item_res = item.save(commit = False)
-            item_res.restaurant = restaurant_obj
-            item_res.save()
-            return redirect('restaurant-detail', restaurant_id)
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit = False) # don't save, not yet
+            item.restaurant = restaurant_obj # assign the item to a restaurant, which one? the restaurant_obj that i am in its page
+            item.save()
+            return redirect('restaurant-detail', restaurant_id) # and i can type it restaurant_is = restaurant_obj.id, whatever. 
     context = {
-        "items":item,
+        "items":form,
         "restaurant": restaurant_obj
     }
     return render(request, 'item_create.html', context)

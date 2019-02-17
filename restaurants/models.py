@@ -16,5 +16,8 @@ class Restaurant(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=120)
     description = models.TextField()
-    price = models.IntegerField()
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    price = models.DecimalField(decimal_places=2, max_digits=6)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='items')
+
+    def __str__(self):
+        return self.name

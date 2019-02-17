@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class RestaurantForm(forms.ModelForm):
     class Meta:
         model = Restaurant
-        fields = '__all__'
+        exclude = ['owner',]
 
         widgets = {
         	'opening_time': forms.TimeInput(attrs={'type':'time'}),
@@ -30,5 +30,7 @@ class SigninForm(forms.Form):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ('name', 'description', 'price')
+        exclude = ['restaurant', ]
+
+        # exclude = [ 'resturant',] is better
     

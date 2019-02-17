@@ -10,7 +10,11 @@
   <h5 class="card-header">Create Item</h5>
   <div class="card-body">
     <p class="card-text">
-        <form action="{% url 'item-create' restaurant.id %}" method="POST">
+        <form action="{% url 'item-create' restaurant.id %}" method="POST"> 
+          {% comment %}
+            i need the restaurant id to know which restaurant i am adding the item to...
+            its like an update.html
+          {% endcomment %}
             {% csrf_token %}
             {{items|crispy}}
             <input type="submit" value="Create item" class="btn btn-outline-success">
